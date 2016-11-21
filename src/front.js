@@ -9,7 +9,6 @@ function doGet() {
   html.interval     = sp.getProperty('INTERVAL')        || '10';
   html.durBefore    = sp.getProperty('DURATION_BEFORE') || '1';
   html.durAfter     = sp.getProperty('DURATION_AFTER')  || '1';
-  html.todoistToken = sp.getProperty('TODOIST_TOKEN')   || '';
   html.toCalId      = sp.getProperty('TO_CALID')        || '';
 
   var fromCalIdsAll = sp.getProperty('FROM_CALIDs');
@@ -39,7 +38,6 @@ function apply(params) {
     DURATION_AFTER:  params.durAfter,
     FROM_CALIDs:     params.fromCalIds,
     TO_CALID:        params.toCalId,
-    TODOIST_TOKEN:   params.todoistToken,
   });
 
   // トリガーを削除 -> 追加

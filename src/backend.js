@@ -71,14 +71,12 @@ function addEvents(fromCal, toCal, fromEvts, toEvts, toEvtIds) {
 
   // ２．追加処理
   evtsToAdd.forEach(function(fromEvt) {
-    // イベント作成、Todoistタスク作成
+    // イベント作成
     var createdEvt = createEvent(fromCal, toCal, fromEvt);
-    var todoistId  = createTodoist(createdEvt);
 
     // カスタムタグ設定
     var fromEvtLastUpdated = moment(fromEvt.getLastUpdated());
     createdEvt.setTag('LAST_UPDATED', fromEvtLastUpdated.format());
-    createdEvt.setTag('TODOIST_ID',   todoistId);
     createdEvt.setTag('EVENT_ID',     getRecurringEvtId(fromEvt, fromEvt.getId()));
     // createdEvt.setTag('EVENT_ID', fromEvt.getId());
     // TODO: 繰り返しイベントの取扱いが適当な点を要修正
@@ -145,10 +143,6 @@ function changeEvents(fromCal, fromEvts, toEvts, toEvtIds) {
     toEvt.setLocation(fromEvt.getLocation());
     var fromEvtLastUpdated = moment(fromEvt.getLastUpdated());
     toEvt.setTag('LAST_UPDATED', fromEvtLastUpdated.format());
-
-    // Todoistタスクを更新
-    var todoistId = toEvt.getTag('TODOIST_ID');
-    updateTodoist(toEvt, todoistId);
   });
 
   // ３．変更件数取得
@@ -169,7 +163,6 @@ function deleteEvents(toEvts, fromEvtIds) {
   // ２．削除処理
   evtsToDelete.forEach(function(toEvt) {
     toEvt.deleteEvent();
-    deleteTodoist(toEvt.getTag('TODOIST_ID'));
   });
 
   // ３．削除件数
