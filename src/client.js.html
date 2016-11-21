@@ -1,0 +1,127 @@
+<script>
+$(function() {
+  // DatePicker
+  $('.date').datetimepicker({ locale: 'ja', format : 'YYYY/MM/DD' });
+
+  // Checkboxの排他処理（toをチェックしたとき）
+  $('input[name=chk-to]').click(function() {
+    var checked = $(this).prop('checked');
+    if (checked) {
+      $('input[name=chk-to]').prop('checked', false);
+      $(this).parents('tr').find('input[name=chk-from]').prop('checked', false);
+    }
+    $(this).prop('checked', checked);
+  });
+
+  // Checkboxの排他処理（fromをチェックしたとき）
+  $('input[name=chk-from]').click(function() {
+    var checked = $(this).prop('checked');
+    if (checked) {
+      $(this).parents('tr').find('input[name=chk-to]').prop('checked', false);
+    }
+    $(this).prop('checked', checked);
+  });
+
+  // Enableにした時、Disabledをはずす
+  $('label#btn-enable').click(function() {
+    $('form#settings-form').find('input').prop('disabled', false)
+    $('form#settings-form').find('label.btn-interval').attr('disabled', false)
+    $('input[name=automerge]').attr('checked', false);
+    $(this).find('input[name=automerge]').attr('checked', !false);
+  });
+
+  // Disableにした時、Desabledをつける
+  $('label#btn-disable').click(function() {
+    $('form#settings-form').find('input').prop('disabled', true)
+    $('form#settings-form').find('label.btn-interval').attr('disabled', true)
+    $('input[name=automerge]').attr('checked', true);
+    $(this).find('input[name=automerge]').attr('checked', !true);
+  });
+
+  // Check Intervalを触った時、Checkedをつけはずしする
+  $('label.btn-interval').click(function() {
+    $('input[name=interval]').attr('checked', false);
+    $(this).find('input[name=interval]').attr('checked', true);
+  });
+});
+
+// サーバーとの通信時: onfailed
+function onfailed(selector, err) {
+  $(selector).addClass('alert-danger')
+  .removeClass('alert-info')
+  .removeClass('alert-success')
+  .html('<i class="fa fa-exclamation-circle fa-fw"></i> ' + err)
+  .show();
+}
+
+// サーバーとの通信時: onstart
+function onstart(selector, msg) {
+  $(selector).addClass('alert-info')
+  .removeClass('alert-danger')
+  .removeClass('alert-success')
+  .html('<i class="fa fa-spinner fa-spin fa-fw"></i> ' + msg)
+  .show();
+}
+
+// サーバーとの通信時: onsuccess
+function onsuccess(selector, msg) {
+  $(selector).addClass('alert-success')
+  .removeClass('alert-danger')
+  .removeClass('alert-info')
+  .html('<i class="fa fa-check fa-fw"></i> ' + msg)
+  .show();
+}
+
+// merge/clean
+function operate(flag) {
+  // formからパラメータを取得
+  var $form = $('#operation-form');
+  var datefrom = $form.find('input[name=datefrom]').val();
+  var dateto   = $form.find('input[name=dateto]'  ).val();
+
+  // GAS上の関数を実行
+  var target = '#operation-form-msg';
+  onstart(target, 'Executiong Script...');
+  var obj = google.script.run.withSuccessHandler(function(res) {
+    var $msg = $form.find(target);
+    var msg = '';
+    msg += (res.numAdded  >0) ? res.numAdded  +' events ADDED. '   : '';
+    msg += (res.numChanged>0) ? res.numChanged+' events CHANGED. ' : '';
+    msg += (res.numDeleted>0) ? res.numDeleted+' events DELETED. ' : '';
+    msg += (msg=='') ? 'No events AFFECTED.' : '';
+    onsuccess(target, msg);
+  }).withFailureHandler(function(err) {
+    onfailed(target, err);
+  });
+
+  if      (flag=='merge') obj.merge(datefrom, dateto);
+  else if (flag=='clean') obj.clean(datefrom, dateto);
+}
+
+// apply
+function apply() {
+  // formからパラメータを取得
+  var $form = $('#settings-form');
+  var fromCalIds = '';
+  $form.find('input[name=chk-from]:checked')
+  .each(function(){ fromCalIds += $(this).val() + ';' });
+  var params = {
+    automerge:    $form.find('input[name=automerge]:checked').val(),
+    interval:     $form.find('input[name=interval]:checked').val(),
+    durBefore:    $form.find('input[name=durbefore]').val(),
+    durAfter:     $form.find('input[name=durafter]' ).val(),
+    toCalId:      $form.find('input[name=chk-to]:checked').val(),
+    todoistToken: $form.find('input[name=todoisttoken]').val(),
+    fromCalIds:   (fromCalIds.length==0) ? '' : fromCalIds.slice(0,-1),
+  };
+
+  // GAS上の関数を実行
+  var target = '#settings-form-msg';
+  onstart(target, "Applying changes...");
+  google.script.run.withSuccessHandler(function(res) {
+    onsuccess(target, 'Settings successfully changed.');
+  }).withFailureHandler(function(err) {
+    onfailed(target, err);
+  }).apply(params);
+}
+</script>
