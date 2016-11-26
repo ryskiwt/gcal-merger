@@ -37,7 +37,7 @@ https://script.google.com/macros/s/[アプリごとに異なる]/exec
 ## 導入方法 (node-google-apps-scriptが使える場合)
 
 ### 1. GoogleAppsScriptの新規プロジェクトを作成
-上と一緒
+（上と一緒）
 
 ### 2. 作成したGASファイルのスクリプトID（ファイルID）を控える
 「ファイル > プロジェクトのプロパティ > スクリプトID」を控える。
@@ -53,7 +53,16 @@ $ git reset --hard origin/master
 $ gapps upload
 ```
 
+### 3. Webアプリケーションとして公開
+（上と一緒）
+
+### 4. Webアプリケーションにアクセス
+（上と一緒）
+
+
 ## 使用方法
+
+[画面サンプル](http://bl.ocks.org/ryskiwt/raw/d6d61897ead35dd21d94a5bcf11be860/)
 
 ### Settings
 
