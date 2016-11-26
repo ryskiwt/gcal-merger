@@ -62,7 +62,7 @@ $ gapps upload
 
 ## 使用方法
 
-[画面サンプル](http://bl.ocks.org/ryskiwt/raw/d6d61897ead35dd21d94a5bcf11be860/)
+[画面サンプル](https://ryskiwt.github.io/gcal-merger/)
 
 ### Settings
 
