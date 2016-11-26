@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang='ja'>
+<head>
+  <meta charset='UTF-8'>
+  <title>gcal-marge</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'>
+
+  <!-- including stylesheets -->
+  <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
+  <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css'>
+  <link rel='stylesheet' href='https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/v4.0.0/build/css/bootstrap-datetimepicker.css'>
+</head>
+
+<body>
+  <div class='container'>
+    <div class='row'>
+      <div class='col-xs-12'>
+
+        <!-- NAVBAR ******************************************************** -->
+        <nav class='navbar navbar-default' role='navigation'>
+          <div class='navbar-header'>
+            <a class='navbar-brand' href=''><b>Google Calendar Merger</b></a>
+          </div>
+        </nav>
+
+        <!-- OPERATION FORM ************************************************ -->
+        <h3><b><i class='fa fa-hand-o-right fa-fw'></i> Operation</b></h3>
+        <form id='operation-form'>
+          <input type='hidden' name='request' value='exec'>
+
+          <!-- message ===================================================== -->
+          <div class='alert' id='operation-form-msg' style='display:none;'></div>
+
+          <!-- date from/to ================================================ -->
+          <div class='form-group' style='margin-bottom: 5px;'>
+            <label class='control-label'>Date from</label>
+            <div class='input-group'>
+              <input type='text' placeholder='yyyy/mm/dd' class='form-control date' name='datefrom' />
+              <span class='input-group-addon'>
+                <span class='glyphicon glyphicon-calendar'></span>
+              </span>
+            </div>
+          </div>
+
+          <div class='form-group'>
+            <label class='control-label'>Date to</label>
+            <div class='input-group'>
+              <input type='text' placeholder='yyyy/mm/dd' class='form-control date' name='dateto' />
+              <span class='input-group-addon'>
+                <span class='glyphicon glyphicon-calendar'></span>
+              </span>
+            </div>
+          </div>
+
+          <!-- MERGE/CLEAN buttons ========================================= -->
+          <div class='form-group form-inline'>
+            <button id='btn-merge' class='btn btn-primary'>
+              <i class='fa fa-check fa-fw'></i> MERGE <small>now</small>
+            </button>
+            <button id='btn-clean' class='btn btn-danger'>
+              <i class='fa fa-trash fa-fw'></i> CLEAN <small>merged events</small>
+            </button>
+          </div>
+        </form>
+        <HR />
+        <BR />
+
+
+        <!-- SETTINGS FORM ************************************************* -->
+        <h3><b><i class='fa fa-gear fa-fw'></i> Settings</b></h3>
+        <form id='settings-form'>
+          <input type='hidden' name='request' value='update'>
+
+          <!-- message ===================================================== -->
+          <div class='alert' id='settings-form-msg' style='display:none;'></div>
+
+          <!-- general settings table ====================================== -->
+          <table class='table table-hover table-condensed'>
+            <thead>
+              <tr><th colspan='2'><i class='fa fa-repeat fa-fw'></i> Auto Check &amp; Merge</th><th></th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th class='col-xs-4'>Enable</th>
+                <td>
+                  <div>
+                    <div class='btn-group btn-group-sm btn-group-justified' data-toggle='buttons'>
+                      <label id='btn-enable' class='btn btn-default active' >
+                        <input type='radio' name='automerge' value='on' checked />
+                        <i class='fa fa-circle-o fa-fw'></i> enable
+                      </label>
+                      <label id='btn-disable' class='btn btn-default' >
+                        <input type='radio' name='automerge' value='off' />
+                        <i class='fa fa-close fa-fw'></i> disable
+                      </label>
+                    </div>
+                  </div>
+                </td>
+              </tr><tr>
+                <th>Check Interval</th>
+                <td>
+                  <div>
+                    <div class='btn-group btn-group-sm btn-group-justified' data-toggle='buttons'>
+                        <label class='btn btn-default btn-interval'>
+                          <input type='radio' name='interval' value='5' /> 5<small>min.</small>
+                        </label>
+                        <label class='btn btn-default btn-interval active'>
+                          <input type='radio' name='interval' value='10' checked /> 10<small>min.</small>
+                        </label>
+                        <label class='btn btn-default btn-interval'>
+                          <input type='radio' name='interval' value='15' /> 15<small>min.</small>
+                        </label>
+                        <label class='btn btn-default btn-interval'>
+                          <input type='radio' name='interval' value='30' /> 30<small>min.</small>
+                        </label>
+                    </div>
+                  </div>
+                </td>
+              </tr><tr>
+                <th>Duration to Check</th>
+                <td>
+                  <div class='form-group' style='margin-bottom: 5px;'>
+                    <label>Since</label>
+                    <input type='text' class='form-control input-sm' value='1' size='3' name='durbefore' />
+                    <p class='help-block small' style='margin-bottom: 0px;'>months before the each check</p>
+                  </div>
+                  <div class='form-group' style='margin-bottom: 0px;'>
+                    <label>To</label>
+                    <input type='text' class='form-control input-sm' value='1' size='3' name='durafter' />
+                    <p class='help-block small' style='margin-bottom: 0px;'>months after the each check</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- calendars table ============================================= -->
+          <table class='table table-hover table-condensed' id='table-cal'>
+            <thead>
+              <tr>
+                <th><i class='fa fa-calendar fa-fw'></i> Calendars to merge</th>
+                <th class='text-center' style='width: 80px;'>from</th>
+                <th class='text-center' style='width: 80px;'>to</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr>
+                  <td>カレンダー1</td>
+                  <td class='text-center'>
+                    <input type='checkbox' name='chk-from' value='' checked />
+                  </td>
+                  <td class='text-center'>
+                    <input type='checkbox' name='chk-to'   value='' />
+                  </td>
+                </tr>
+                <tr>
+                  <td>カレンダー2</td>
+                  <td class='text-center'>
+                    <input type='checkbox' name='chk-from' value='' checked />
+                  </td>
+                  <td class='text-center'>
+                    <input type='checkbox' name='chk-to'   value='' />
+                  </td>
+                </tr>
+                <tr>
+                  <td>カレンダー3</td>
+                  <td class='text-center'>
+                    <input type='checkbox' name='chk-from' value='' />
+                  </td>
+                  <td class='text-center'>
+                    <input type='checkbox' name='chk-to'   value='' checked />
+                  </td>
+                </tr>
+                <tr>
+                  <td>カレンダー4</td>
+                  <td class='text-center'>
+                    <input type='checkbox' name='chk-from' value='' />
+                  </td>
+                  <td class='text-center'>
+                    <input type='checkbox' name='chk-to'   value='' />
+                  </td>
+                </tr>
+            </tbody>
+          </table>
+
+          <!-- UPDATE button =============================================== -->
+          <div class='form-group'>
+            <button id='btn-apply' class='btn btn-primary'>
+              <i class='fa fa-check fa-fw'></i> APPLY <small>changes</small>
+            </button>
+          </div>
+        </form>
+        <HR />
+
+      </div>
+    </div>
+  </div>
+
+  <!-- including javascripts -->
+  <script src='https://code.jquery.com/jquery-2.2.3.min.js'></script>
+  <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js'></script>
+  <script src='https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/v4.0.0/src/js/bootstrap-datetimepicker.js'></script>
+  <script src='client.js'></script>
+</body>
+</html>
