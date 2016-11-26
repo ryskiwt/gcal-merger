@@ -11,17 +11,17 @@
 
 ## 導入方法
 
-### GoogleAppsScriptの新規プロジェクトを作成
+### 1. GoogleAppsScriptの新規プロジェクトを作成
 Googleドライブにて 「新規 > その他 > Google Apps Script」 から新規のGASプロジェクトを作成する。
 
-### srcフォルダ配下のソースファイルを追加
+### 2. srcフォルダ配下のソースファイルを追加
 1. 「ファイル > 新規作成 > スクリプトファイル or HTMLファイル」からファイルを新規作成
 2. srcフォルダ配下のファイルをそれぞれコピペ
  - 「~.js」ファイルは、「スクリプトファイル」として作成する（「~.gs」の名前で作成される）
  - 「~.html」ファイルは、「HTMLファイル」として作成する
  - 「~.js」ファイルは、名前が一致していなくても良いが、「~.html」ファイルは
 
-### Webアプリケーションとして公開
+### 3. Webアプリケーションとして公開
 1. 「公開 > Webアプリケーションとして導入」を選択する
 2. 以下の設定を指定して「更新」
  - 「現在のウェブ アプリケーションの URL」のURLを控えておく
@@ -29,9 +29,29 @@ Googleドライブにて 「新規 > その他 > Google Apps Script」 から新
  - 「次のユーザーとしてアプリケーションを実行」 -> 自分
  - 「アプリケーションにアクセスできるユーザー」 -> 自分だけ
 
-### Webアプリケーションにアクセス
+### 4. Webアプリケーションにアクセス
 上記で控えたURLへアクセス
+
 https://script.google.com/macros/s/[アプリごとに異なる]/exec
+
+## 導入方法 (node-google-apps-scriptが使える場合)
+
+### 1. GoogleAppsScriptの新規プロジェクトを作成
+上と一緒
+
+### 2. 作成したGASファイルのスクリプトID（ファイルID）を控える
+「ファイル > プロジェクトのプロパティ > スクリプトID」を控える。
+
+### 3. GitHubからclone して GASへupload
+
+```sh-session
+$ mkdir gcal-merger
+$ cd gcal-merger
+$ git clone git@github.com:ryskiwt/gcal-merger.git .
+$ gapps init <スクリプトID>
+$ git reset --hard origin/master
+$ gapps upload
+```
 
 ## 使用方法
 
