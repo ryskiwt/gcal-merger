@@ -3,6 +3,7 @@
 <head>
   <meta charset='UTF-8'>
   <title>gcal-marge</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'>
 
   <!-- including stylesheets -->
   <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
@@ -53,16 +54,17 @@
 
           <!-- MERGE/CLEAN buttons ========================================= -->
           <div class='form-group form-inline'>
-            <button id='btn-merge' class='btn btn-primary' onclick='event.preventDefault(); operate("merge")'>
+            <button id='btn-merge' class='btn btn-primary'>
               <i class='fa fa-check fa-fw'></i> MERGE <small>now</small>
             </button>
-            <button id='btn-clean' class='btn btn-danger'  onclick='event.preventDefault(); operate("clean")'>
+            <button id='btn-clean' class='btn btn-danger'>
               <i class='fa fa-trash fa-fw'></i> CLEAN <small>merged events</small>
             </button>
           </div>
         </form>
         <HR />
         <BR />
+
 
         <!-- SETTINGS FORM ************************************************* -->
         <h3><b><i class='fa fa-gear fa-fw'></i> Settings</b></h3>
@@ -83,12 +85,12 @@
                 <td>
                   <div>
                     <div class='btn-group btn-group-sm btn-group-justified' data-toggle='buttons'>
-                      <label id='btn-enable' class='btn btn-default <?= (automerge=="on") ? "active" : "" ?>' >
-                        <input type='radio' name='automerge' value='on' <?= (automerge=="on") ? 'checked' : '' ?> />
+                      <label id='btn-enable' class='btn btn-default active' >
+                        <input type='radio' name='automerge' value='on' checked />
                         <i class='fa fa-circle-o fa-fw'></i> enable
                       </label>
-                      <label id='btn-disable' class='btn btn-default <?= (automerge=="off") ? "active" : "" ?>' >
-                        <input type='radio' name='automerge' value='off' <?= (automerge=="off") ? 'checked' : '' ?> />
+                      <label id='btn-disable' class='btn btn-default' >
+                        <input type='radio' name='automerge' value='off' />
                         <i class='fa fa-close fa-fw'></i> disable
                       </label>
                     </div>
@@ -99,13 +101,18 @@
                 <td>
                   <div>
                     <div class='btn-group btn-group-sm btn-group-justified' data-toggle='buttons'>
-                      <? ['5','10','15','30'].forEach(function(i) { ?>
-                        <label class='btn btn-default btn-interval <?= (interval==i) ? "active" : "" ?>'
-                               <?= (automerge=="off") ? 'disabled' : '' ?> >
-                          <input type='radio' name='interval' value='<?= i ?>'
-                                 <?= (interval==i) ? 'checked' : '' ?> /> <?= i ?><small>min.</small>
+                        <label class='btn btn-default btn-interval'>
+                          <input type='radio' name='interval' value='5' /> 5<small>min.</small>
                         </label>
-                      <? }); ?>
+                        <label class='btn btn-default btn-interval active'>
+                          <input type='radio' name='interval' value='10' checked /> 10<small>min.</small>
+                        </label>
+                        <label class='btn btn-default btn-interval'>
+                          <input type='radio' name='interval' value='15' /> 15<small>min.</small>
+                        </label>
+                        <label class='btn btn-default btn-interval'>
+                          <input type='radio' name='interval' value='30' /> 30<small>min.</small>
+                        </label>
                     </div>
                   </div>
                 </td>
@@ -114,14 +121,12 @@
                 <td>
                   <div class='form-group' style='margin-bottom: 5px;'>
                     <label>Since</label>
-                    <input type='text' class='form-control input-sm' <?= (automerge=="off" ) ? "disabled" : "" ?>
-                           value='<?= durBefore ?>' size='3' name='durbefore' />
+                    <input type='text' class='form-control input-sm' value='1' size='3' name='durbefore' />
                     <p class='help-block small' style='margin-bottom: 0px;'>months before the each check</p>
                   </div>
                   <div class='form-group' style='margin-bottom: 0px;'>
                     <label>To</label>
-                    <input type='text' class='form-control input-sm' <?= (automerge=="off" ) ? "disabled" : "" ?>
-                           value='<?= durAfter ?>' size='3' name='durafter' />
+                    <input type='text' class='form-control input-sm' value='1' size='3' name='durafter' />
                     <p class='help-block small' style='margin-bottom: 0px;'>months after the each check</p>
                   </div>
                 </td>
@@ -139,27 +144,48 @@
               </tr>
             </thead>
             <tbody>
-              <? calendars.forEach(function(cal) { ?>
                 <tr>
-                  <td><?= cal.name ?></td>
+                  <td>カレンダー1</td>
                   <td class='text-center'>
-                    <input type='checkbox' name='chk-from' value='<?= cal.id ?>'
-                    <?= (automerge=='off') ? 'disabled' : '' ?>
-                    <?= (fromCalIds.indexOf(cal.id)>-1) ? 'checked' : '' ?> />
+                    <input type='checkbox' name='chk-from' value='' checked />
                   </td>
                   <td class='text-center'>
-                    <input type='checkbox' name='chk-to'   value='<?= cal.id ?>'
-                    <?= (automerge=='off' ) ? 'disabled' : '' ?>
-                    <?= (toCalId==cal.id) ? 'checked' : '' ?> />
+                    <input type='checkbox' name='chk-to'   value='' />
                   </td>
                 </tr>
-              <? }); ?>
+                <tr>
+                  <td>カレンダー2</td>
+                  <td class='text-center'>
+                    <input type='checkbox' name='chk-from' value='' checked />
+                  </td>
+                  <td class='text-center'>
+                    <input type='checkbox' name='chk-to'   value='' />
+                  </td>
+                </tr>
+                <tr>
+                  <td>カレンダー3</td>
+                  <td class='text-center'>
+                    <input type='checkbox' name='chk-from' value='' />
+                  </td>
+                  <td class='text-center'>
+                    <input type='checkbox' name='chk-to'   value='' checked />
+                  </td>
+                </tr>
+                <tr>
+                  <td>カレンダー4</td>
+                  <td class='text-center'>
+                    <input type='checkbox' name='chk-from' value='' />
+                  </td>
+                  <td class='text-center'>
+                    <input type='checkbox' name='chk-to'   value='' />
+                  </td>
+                </tr>
             </tbody>
           </table>
 
           <!-- UPDATE button =============================================== -->
           <div class='form-group'>
-            <button id='btn-apply' class='btn btn-primary' onclick='event.preventDefault(); apply()'>
+            <button id='btn-apply' class='btn btn-primary'>
               <i class='fa fa-check fa-fw'></i> APPLY <small>changes</small>
             </button>
           </div>
@@ -175,8 +201,6 @@
   <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js'></script>
   <script src='https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/v4.0.0/src/js/bootstrap-datetimepicker.js'></script>
-
-  <!-- calendar merger javascript -->
-  <?!= HtmlService.createHtmlOutputFromFile('client.js').getContent(); ?>
+  <script src='client.js'></script>
 </body>
 </html>
