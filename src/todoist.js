@@ -16,7 +16,7 @@ function createTodoist(evt) {
       '"args":{' +
         '"content":"〜' +dayEnd.format("HH:mm")+ '　' +evt.getTitle()+ '",' +
         '"date_string":"' +dayStart.format("YYYY-MM-DD HH:mm")+ '"' +
-      '},' +
+      '}' +
     '}]'
   }
   var data = post(url, payload);
@@ -44,7 +44,7 @@ function updateTodoist(evt, id) {
         '"id":"' +id+ '",' +
         '"content":"' +dayStart.format("HH:mm")+ '〜' +dayEnd.format("HH:mm")+ '　' +evt.getTitle()+ '",' +
         '"date_string":"' +dayStart.format("YYYY-MM-DD HH:mm")+ '"' +
-      '},' +
+      '}' +
     '}]'
   };
   var data = post(url, payload);
@@ -64,7 +64,7 @@ function deleteTodoist(id) {
       '"type":"item_delete",' +
       '"uuid":"' +uuid()+ '",' +
       '"temp_id":"' +uuid()+ '",' +
-      '"args":{"ids":["' +id+ '"]},' +
+      '"args":{"ids":["' +id+ '"]}' +
     '}]'
   };
   var data = post(url, payload);
