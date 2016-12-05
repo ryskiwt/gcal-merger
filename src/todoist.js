@@ -14,7 +14,7 @@ function createTodoist(evt) {
       '"uuid":"' +uuid()+ '",' +
       '"temp_id":"' +uuid()+ '",' +
       '"args":{' +
-        '"content":"〜' +dayEnd.format("HH:mm")+ '　' +evt.getTitle()+ '",' +
+        '"content":"' +dayStart.format("HH:mm")+ '〜' +dayEnd.format("HH:mm")+ '　' +evt.getTitle()+ '",' +
         '"date_string":"' +dayStart.format("YYYY-MM-DD HH:mm")+ '"' +
       '}' +
     '}]'
