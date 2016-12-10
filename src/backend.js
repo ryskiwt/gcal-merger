@@ -125,7 +125,7 @@ function changeEvents(fromCal, fromEvts, toEvts, toEvtIds) {
       toEvt.getLocation() + toEvt.getDescription();
 
     // 終日イベントでない場合は終了時刻も結合する
-    if (!fromEvt.isAllDayEvent) {
+    if (!fromEvt.isAllDayEvent()) {
       fromString += fromEvt.getEndTime();
       toString += toEvt.getEndTime();
     }

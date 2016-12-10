@@ -6,13 +6,14 @@ function createTodoist(evt) {
 
   var dayStart = moment(evt.getStartTime());
   var dayEnd   = moment(evt.getEndTime());
+  var temp_id = uuid();
   var url = "https://todoist.com/API/v7/sync";
   var payload = {
     token : TODOIST_TOKEN,
     commands : '[{' +
       '"type":"item_add",' +
       '"uuid":"' +uuid()+ '",' +
-      '"temp_id":"' +uuid()+ '",' +
+      '"temp_id":"' +temp_id+ '",' +
       '"args":{' +
         '"content":"' +dayStart.format("HH:mm")+ '〜' +dayEnd.format("HH:mm")+ '　' +evt.getTitle()+ '",' +
         '"date_string":"' +dayStart.format("YYYY-MM-DD HH:mm")+ '"' +
